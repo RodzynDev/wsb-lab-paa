@@ -1,16 +1,16 @@
 on:
   push:
     branches:
-      - master
+      - deploy
 
 env:
-  AZURE_WEBAPP_NAME: rodzynapp
+  AZURE_WEBAPP_NAME: wsbnode/deploy
   AZURE_WEBAPP_PACKAGE_PATH: '.'
   NODE_VERSION: '10.15'
 
 jobs:
   build-and-deploy:
-    name: Build and Deploy
+    name: Build and Deploy on branch Deploy
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v2
