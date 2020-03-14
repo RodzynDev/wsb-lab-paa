@@ -5,11 +5,19 @@ const json = require('koa-json')
 const onerror = require('koa-onerror')
 const bodyparser = require('koa-bodyparser')
 const logger = require('koa-logger')
+const azure = require('azure-storage')
 
 const index = require('./routes/index')
 const users = require('./routes/users')
 
 require('./store').init()
+
+const retryOperations = new azure.ExponentialRetryPolicyFilter();
+
+const tableSvc =
+    azure
+    .createTableService(process.env.AZURE_STORAGE_ACCOUNT, process.env.AZURE_STORAGE_ACCESS_KEY)
+    .withFilter(retryOperations);
 
 // error handler
 onerror(app)
@@ -41,6 +49,10 @@ app.use(users.routes(), users.allowedMethods())
 // error-handling
 app.on('error', (err, ctx) => {
   console.error('server error', err, ctx)
+});
+
+tableSvc.createTableIfNotExists('TwitchTable', function(error, result, response){
+  if(!error){}
 });
 
 module.exports = app
