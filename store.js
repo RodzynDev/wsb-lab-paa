@@ -5,9 +5,14 @@ const retryOperations = new storage.ExponentialRetryPolicyFilter();
 
 function LoggingFilter() {
     this.handle = (requestOptions, next) => {
-        console.log(requestOptions);
+        console.log("requestOptions: ")
+        console.log(requestOptions)
         next(requestOptions, (returnObject, finalCallback, next) => {
-            console.log(returnObject);
+            if(next) {
+                next(requestOptions, (returnObject, finalCallback, next))
+            } else {
+                finalCallback(returnObject);
+            }
         })
     }
 }
@@ -16,7 +21,7 @@ const service =
     storage
         .createTableService()
         .withFilter(retryOperations)
-        .withFilter(LoggingFilter());
+        .withFilter(new LoggingFilter());
 
 const table = 'tasks'
 
