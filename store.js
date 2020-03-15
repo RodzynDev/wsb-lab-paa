@@ -1,4 +1,6 @@
 const storage = require('azure-storage')
+const uuid = require('uuid')
+
 const retryOperations = new storage.ExponentialRetryPolicyFilter();
 
 const LoggingFilter = () => {
@@ -27,6 +29,22 @@ const init = async () => (
   })
 )
 
+const createTask = async (title) => (
+  new Promise((resolve, reject) => {
+    const generator = storage.TableUtilities.entityGenerator
+    const task = {
+      PartitionKey: generator.String('task'),
+      RowKey: generator.String(uuid.v4()),
+      title
+    }
+
+    service.insertEntity(table, task, (error, result, response) => {
+      !error ? resolve() : reject()
+    })
+  })
+)
+
 module.exports = {
-  init
+  init,
+  createTask
 }
