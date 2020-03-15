@@ -3,12 +3,11 @@ const uuid = require('uuid')
 
 const retryOperations = new storage.ExponentialRetryPolicyFilter();
 
-const LoggingFilter = () => {
+function LoggingFilter() {
     this.handle = (requestOptions, next) => {
         console.log(requestOptions);
         next(requestOptions, (returnObject, finalCallback, next) => {
             console.log(returnObject);
-            next(requestOptions, finalCallback);
         })
     }
 }
@@ -17,7 +16,7 @@ const service =
     storage
         .createTableService()
         .withFilter(retryOperations)
-        .withFilter(LoggingFilter);
+        .withFilter(LoggingFilter());
 
 const table = 'tasks'
 
