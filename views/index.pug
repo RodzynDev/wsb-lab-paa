@@ -18,7 +18,9 @@ block content
         tr
           th(scope= "col") Tytuł
           th(scope= "col") Opis zadania
+          th(scope= "col") Data dodania
         each task in tasks
           tr
             td= task.title
             td= task.desc
+            td= task.timestamp

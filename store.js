@@ -1,4 +1,5 @@
 const storage = require('azure-storage')
+const moment = require('moment');
 const uuid = require('uuid')
 
 const retryOperations = new storage.ExponentialRetryPolicyFilter();
@@ -52,13 +53,14 @@ const createTask = async (title, desc) => (
 const listTasks = async () => (
     new Promise((resolve, reject) => {
         const query = new storage.TableQuery()
-            .select(['title', 'desc'])
+            .select(['title', 'desc', 'Timestamp'])
             .where('PartitionKey eq ?', 'task')
 
         service.queryEntities(table, query, null, (error, result, response) => {
             !error ? resolve(result.entries.map((entry) => ({
                 title: entry.title._,
-                desc: entry.desc._? entry.desc._: 'Brak'
+                desc: entry.desc._? entry.desc._: 'Brak opisu zadania',
+                timestamp: moment(entry.Timestamp._).format("DD-MM-YYYY HH:mm:ss")
             }))) : reject()
         })
     })
