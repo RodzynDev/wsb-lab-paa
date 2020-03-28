@@ -13,3 +13,10 @@ block content
     input(type="textarea" id="desc" name="desc")
     br
     input(type="submit", value="Dodaj")
+
+    table
+        tr
+          th(scope= "col") Tytuł
+        each task in tasks
+          tr
+            td= task.title
