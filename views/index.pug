@@ -18,9 +18,14 @@ block content
         tr
           th(scope= "col") Tytuł
           th(scope= "col") Opis zadania
-          th(scope= "col") Data dodania
+          th(scope= "col") Data modyfikacji
+          th(scope= "col") Status
+          th(scope= "col") Akcje
         each task in tasks
           tr
             td= task.title
             td= task.desc
             td= task.timestamp
+            td= (task.status == 'completed' ? 'Zakończone' : 'Otwarte')
+            td
+                button(type="button" onclick=`updateTaskStatus('${task.id}', 'completed')`) ✓
