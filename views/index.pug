@@ -17,6 +17,8 @@ block content
     table
         tr
           th(scope= "col") Tytuł
+          th(scope= "col") Opis zadania
         each task in tasks
           tr
             td= task.title
+            td= task.desc
