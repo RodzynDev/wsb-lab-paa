@@ -84,9 +84,24 @@ const updateTaskStatus = async (id, status) => (
     })
 )
 
+const deleteTask = async (id) => (
+    new Promise((resolve, reject) => {
+        const generator = storage.TableUtilities.entityGenerator
+        const task = {
+            PartitionKey: generator.String('task'),
+            RowKey: generator.String(id)
+        }
+
+        service.deleteEntity(table, task, function(error, response){
+            !error ? resolve() : reject()
+        });
+    })
+)
+
 module.exports = {
   init,
   createTask,
   listTasks,
-  updateTaskStatus
+  updateTaskStatus,
+  deleteTask
 }
